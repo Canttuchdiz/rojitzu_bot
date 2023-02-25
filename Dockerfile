@@ -8,8 +8,6 @@ RUN pip install -r requirements.txt
 
 RUN prisma generate
 
-RUN prisma db push
-
 COPY . .
 
 CMD ["python3", "-m", "rojitzu"]
