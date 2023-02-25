@@ -19,12 +19,8 @@ class Logs(commands.Cog):
         await interaction.response.send_modal(modal)
 
     @log_group.command(name="appeal", description="Logs appeal ticket")
-    @app_commands.choices(status=[
-        Choice(name='Accepted', value=1),
-        Choice(name='Declined', value=0)
-    ])
-    async def log_appeal(self, interaction: Interaction, status: Choice[int]) -> None:
-        modal = InfoReceiver(self.client, interaction.channel, bool(status))
+    async def log_appeal(self, interaction: Interaction, status: Literal["Accepted", "Declined"]) -> None:
+        modal = InfoReceiver(self.client, interaction.channel, status)
         await interaction.response.send_modal(modal)
 
 

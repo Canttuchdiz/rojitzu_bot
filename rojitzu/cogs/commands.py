@@ -17,6 +17,10 @@ class Commands(commands.Cog):
     async def ping(self, ctx, *, question=None) -> None:
         await ctx.send('Pong! {0}'.format(round(self.client.latency, 1)))
 
+    @commands.command()
+    async def purge(self, ctx: commands.Context, message_count: str) -> None:
+        await ctx.channel.purge(limit=int(message_count) + 1)
+
     # Shuts down bot, which can only be used by users in id_list in utils
 
     @commands.command(aliases=['guilds'])

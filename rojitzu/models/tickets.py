@@ -24,7 +24,7 @@ class Ticket:
 
 @dataclass
 class AppealTicket(Ticket):
-    status: bool
+    status: str
 
 
 class TicketLogger:

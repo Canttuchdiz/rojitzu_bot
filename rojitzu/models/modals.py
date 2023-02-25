@@ -14,7 +14,7 @@ class InfoReceiver(Modal, title="Info Receiver"):
 
     info = TextInput(label="Ticket Info", style=TextStyle.paragraph)
 
-    def __init__(self, bot: commands.Bot, channel: TextChannel, status: Optional[bool] = None) -> None:
+    def __init__(self, bot: commands.Bot, channel: TextChannel, status: Optional[str] = None) -> None:
         super().__init__(timeout=None)
         self.client = bot
         self.channel = channel
