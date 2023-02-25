@@ -5,7 +5,6 @@ from discord.ext import commands
 
 
 class Commands(commands.Cog):
-
     """
     Arbitrary commands, ranging from little to high importance.
     """
@@ -31,7 +30,8 @@ class Commands(commands.Cog):
     @commands.command()
     @commands.guild_only()
     @commands.is_owner()
-    async def sync(self, ctx: commands.Context, guilds: commands.Greedy[discord.Object], spec: Optional[Literal["~", "*", "^"]] = None) -> None:
+    async def sync(self, ctx: commands.Context, guilds: commands.Greedy[discord.Object],
+                   spec: Optional[Literal["~", "*", "^"]] = None) -> None:
         if not guilds:
             if spec == "~":
                 synced = await ctx.bot.tree.sync(guild=ctx.guild)
@@ -60,6 +60,7 @@ class Commands(commands.Cog):
                 ret += 1
 
         await ctx.send(f"Synced the tree to {ret}/{len(guilds)}.")
+
 
 async def setup(bot):
     await bot.add_cog(Commands(bot))

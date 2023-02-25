@@ -19,3 +19,10 @@ model Infraction {
   reason String
 
 }
+
+model TicketCreator {
+  id String @id @default(uuid())
+  channelid BigInt
+  userid BigInt
+
+}
