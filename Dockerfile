@@ -6,7 +6,9 @@ WORKDIR /app
 
 RUN pip install -r requirements.txt
 
-RUN prisma generate
+RUN sudo prisma generate
+
+RUN sudo prisma db push
 
 COPY . .
 
