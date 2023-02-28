@@ -6,8 +6,10 @@ WORKDIR /app
 
 RUN pip install -r requirements.txt
 
+COPY . .
+
 RUN prisma generate
 
-COPY . .
+RUN prisma db push
 
 CMD ["python3", "-m", "rojitzu"]

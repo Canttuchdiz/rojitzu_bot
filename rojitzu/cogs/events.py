@@ -2,11 +2,9 @@ import asyncio
 import discord
 from discord import Member, User, Guild, AuditLogEntry, TextChannel, Message
 from discord.ext import commands
-from rojitzu.models.infractions import InfractionManager, InfractionType
 from rojitzu.utils.config import Config
 from rojitzu.utils.extentsions import PrismaExt
 from typing import Union
-import itertools
 from datetime import datetime
 import traceback
 import sys
@@ -22,7 +20,7 @@ class Events(commands.Cog):
         self.prisma = PrismaExt()
         self.loop = asyncio.get_event_loop()
         self.loop.create_task(self.prisma.connect_client())
-        self.infraction_manager = InfractionManager(self.client, self.prisma)
+
 
     @commands.Cog.listener()
     async def on_ready(self) -> None:
@@ -31,42 +29,6 @@ class Events(commands.Cog):
         print('ID:', self.client.user.id)
         # print(f'Version: {Config.VERSION}')
 
-    @commands.Cog.listener()
-    async def on_message(self, message: Message) -> None:
-        channel = message.channel
-        channel_creation = channel.created_at.second
-        time_now = datetime.utcnow().second
-        bot = message.author
-        try:
-            if channel.category.id == Config.ticket_cat_id:
-                time_dif = time_now - channel_creation
-                if time_dif < 3 and bot.id == Config.ticketer_id:
-                    for mention in message.mentions:
-                        await self.prisma.ticketcreator.create(
-                            data={
-                                'channelid': channel.id,
-                                'userid': mention.id
-                            })
-        except AttributeError as e:
-            pass
-
-    # @commands.Cog.listener()
-    # async def on_member_update(self, before: Member, after: Member) -> None:
-    #     audit_logs = after.guild.audit_logs(limit=1)
-    #     entry: AuditLogEntry = [entry async for entry in audit_logs][0]
-    #     if not before.is_timed_out() and after.is_timed_out():
-    #         await self.infraction_manager.create_infraction(InfractionType.TIMEOUT, entry.user, after, entry.reason)
-    #
-    # @commands.Cog.listener()
-    # async def on_audit_log_entry_create(self, entry: AuditLogEntry) -> None:
-    #     target: Union[User, Member] = entry.target
-    #     action: str = entry.action.name
-    #
-    #     try:
-    #         await self.infraction_manager.create_infraction(InfractionType(action), entry.user, target, entry.reason)
-    #         return
-    #     except ValueError as e:
-    #         pass
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error) -> None:

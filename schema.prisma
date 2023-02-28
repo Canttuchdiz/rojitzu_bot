@@ -10,19 +10,11 @@ generator client {
   recursive_type_depth = 5
 }
 
-// data models
-model Infraction {
+model Ticket {
   id String @id @default(uuid())
   type String
-  infractorid BigInt
-  targetid BigInt
-  reason String
-
-}
-
-model TicketCreator {
-  id String @id @default(uuid())
-  channelid BigInt
   userid BigInt
-
+  channelid BigInt @unique
+  info String
+  created_at DateTime @default(now())
 }
