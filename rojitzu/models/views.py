@@ -31,6 +31,6 @@ class TicketClose(View):
     @button(label="Close", style=ButtonStyle.danger, emoji='🔒')
     async def close_ticket(self, interaction: Interaction, button_obj: Button) -> None:
         await self.ticket_manager.close_ticket(self.ticket)
-        await interaction.response.send_message("Closing...")
+        await interaction.response.send_message("🔒 Ticket has closed")
 
 

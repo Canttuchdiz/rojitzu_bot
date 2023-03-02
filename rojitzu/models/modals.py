@@ -37,7 +37,11 @@ class TicketDescriptor(Modal, title="Ticket"):
 
         ticket = await self.ticket_manager.create_ticket(TicketType.TICKET, interaction.user,
                                                          self.category, self.info.value)
-        lembed = self.ticket_manager.link_ticket(ticket)
+        try:
+            lembed = ticket.link_ticket()
+        except AttributeError as e:
+            await interaction.response.send_message("Your ticket is still being managed", ephemeral=True)
+            return
         fem = Embed(title="Support Ticket", description=self.info.value, color=Color.blue())
         view = TicketClose(self.client, ticket, ticket.channel)
         await ticket.channel.send(view=view, embed=fem)
