@@ -14,7 +14,6 @@ from enum import Enum
 
 
 class TicketType(Enum):
-
     TICKET = "ticket"
     APPEAL = "appeal"
 
@@ -46,6 +45,16 @@ class Ticket:
         )
         await self.channel.delete()
 
+    async def user_add(self, user: Union[User, Member]) -> Ticket:
+        await self.channel.set_permissions(user, send_messages=True, read_messages=True,
+                                      attach_files=True, external_emojis=True, read_message_history=True)
+        return self
+
+    async def user_remove(self, user: Union[User, Member]) -> Ticket:
+        await self.channel.set_permissions(user, send_messages=False, read_messages=False,
+                                      attach_files=False, external_emojis=False,
+                                      read_message_history=False)
+        return self
 
 
 @dataclass
@@ -68,8 +77,8 @@ class TicketManager:
             ticket_users = [ticket.user.id for ticket in await inst.tickets]
             if user.id not in ticket_users:
                 return await func(inst, *args)
-        return inner
 
+        return inner
 
     @can_create
     async def create_ticket(self, ticket_type: TicketType, user: Union[User, Member],
@@ -82,7 +91,6 @@ class TicketManager:
         return ticket
 
     async def managed_log(self, interaction: Interaction, log_channel: TextChannel) -> Ticket:
-
         ticket = await self.get_ticket(interaction.channel)
         await ticket.log_ticket(interaction.user, log_channel)
         await ticket.delete_ticket(self.prisma)
@@ -115,9 +123,7 @@ class TicketManager:
         return ticket
 
     async def close_ticket(self, ticket: Union[Ticket, AppealTicket]) -> Union[Ticket, AppealTicket]:
-        await ticket.channel.set_permissions(ticket.user, send_messages=False, read_messages=False,
-                                             attach_files=False, external_emojis=False,
-                                             read_message_history=False)
+        await ticket.user_remove(ticket.user)
         return ticket
 
     @property
@@ -129,4 +135,3 @@ class TicketManager:
         )
         return [Ticket(TicketType(ticket.type), self.client.get_user(ticket.userid),
                        self.client.get_channel(ticket.channelid), ticket.info) for ticket in table]
-
